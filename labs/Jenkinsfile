@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') { steps { checkout scm } }
+        stage('Install & Test') {
+            steps {
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r requirements.txt
+                    pytest test_app.py -v
+                '''
+            }
+        }
+        stage('Docker Build') { steps { sh "docker build -t flask-app:${BUILD_NUMBER} ." } }
+    }
+}
