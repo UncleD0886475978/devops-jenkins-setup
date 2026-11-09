@@ -1,5 +1,20 @@
 # devops-jenkins-setup — BUILD
 
+## One-line install (fresh Ubuntu/Debian VM)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/UncleD0886475978/devops-jenkins-setup/main/setup.sh | bash
+```
+
+The script installs its own prerequisites (git, curl, Docker, and python3/venv) via apt/official sources, then discovers and runs the repo's actual entry point.
+
+Alternative — clone and run:
+
+```bash
+git clone https://github.com/UncleD0886475978/devops-jenkins-setup.git
+cd devops-jenkins-setup && ./setup.sh
+```
+
 - **Repo:** `UncleD0886475978/devops-jenkins-setup` — public, original (not a fork). Described as "DevOps-Jenkins-HomeLab (Python)".
 - **Stack actually found** (via GitHub connector directory listing of the root):
   - Root contains **only** `README.md` (619 B) and a `labs/` directory.
@@ -8,8 +23,8 @@
 
 ## What setup.sh does
 
-1. Uses the current checkout if its git remote mentions `devops-jenkins-setup` (or the script sits in the repo root); otherwise clones into `~/repos/devops-jenkins-setup` (`git pull` if already there).
-2. Checks docker and python3, printing install URLs (Docker Desktop, Jenkins download page, python.org) for anything missing and exiting cleanly.
+1. Bootstraps base tools (git/curl) before locating/cloning, then installs Docker and python3 on Ubuntu/Debian.
+2. Uses the current checkout if its git remote mentions `devops-jenkins-setup` (or the script sits in the repo root); otherwise clones into `~/repos/devops-jenkins-setup` (`git pull` if already there).
 3. Discovers the real entry point at runtime: Compose file → Dockerfile → Jenkinsfile → labs-only.
 4. If a `requirements.txt` exists anywhere in the checkout, installs it into a local `.venv`.
 5. Starts Jenkins accordingly — `docker compose up -d --build` + wait + `http://localhost:8080` for Compose; build/run on 8080/50000 for a Dockerfile; for labs-only mode it lists the labs and prints the official `jenkins/jenkins:lts` run command instead of inventing a setup the repo doesn't define.
